@@ -8,13 +8,31 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+function RotatingCircleText({ text, size }: { text: string; size: number }) {
+  const radius = size / 2 - 12;
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ animation: "spin-slow 20s linear infinite" }}>
+      <defs>
+        <path
+          id="circlePath"
+          d={`M ${size / 2}, ${size / 2} m -${radius}, 0 a ${radius},${radius} 0 1,1 ${radius * 2},0 a ${radius},${radius} 0 1,1 -${radius * 2},0`}
+        />
+      </defs>
+      <text fill="rgba(255,255,255,0.2)" fontSize="11" fontFamily="monospace" fontWeight="600" letterSpacing="3">
+        <textPath href="#circlePath">{text}</textPath>
+      </text>
+    </svg>
+  );
+}
+
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const scrollHintRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -30,20 +48,30 @@ export function Hero() {
           { opacity: 0, y: 60 },
           { opacity: 1, y: 0, duration: 1.2 }, 0.4)
         .fromTo(subRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 1 }, 0.8)
-        .fromTo(ctaRef.current,
-          { opacity: 0, y: 30 },
-          { opacity: 1, y: 0, duration: 0.8 }, 1.1)
-        .fromTo(scrollHintRef.current,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.8 }, 2);
+          { opacity: 0, x: -30 },
+          { opacity: 1, x: 0, duration: 1 }, 0.8)
+        .fromTo(circleRef.current,
+          { opacity: 0, scale: 0.8 },
+          { opacity: 1, scale: 1, duration: 1.2, ease: "power2.out" }, 0.6);
 
-      // ── SCROLL-DRIVEN EXIT + RETURN (scrub = reversible) ──
+      // ── CTA: fades + slides up on scroll into view ──
+      gsap.from(ctaRef.current, {
+        y: 40,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ctaRef.current,
+          start: "top 95%",
+          toggleActions: "play none none none",
+        },
+      });
+
+      // ── SCROLL-DRIVEN EXIT — second half of 200dvh ──
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top top",
+          start: "40% top",
           end: "bottom top",
           scrub: 1,
         },
@@ -52,9 +80,8 @@ export function Hero() {
       scrollTl
         .fromTo(badgeRef.current, { opacity: 1, y: 0 }, { opacity: 0, y: 60, duration: 0.3, ease: "none", immediateRender: false }, 0)
         .fromTo(headlineRef.current, { opacity: 1, y: 0, scale: 1 }, { opacity: 0, y: 120, scale: 0.95, duration: 1, ease: "none", immediateRender: false }, 0)
-        .fromTo(subRef.current, { opacity: 1, y: 0 }, { opacity: 0, y: 80, duration: 0.6, ease: "none", immediateRender: false }, 0.1)
-        .fromTo(ctaRef.current, { opacity: 1, y: 0 }, { opacity: 0, y: -60, duration: 0.5, ease: "none", immediateRender: false }, 0.15)
-        .fromTo(scrollHintRef.current, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "none", immediateRender: false }, 0);
+        .fromTo(subRef.current, { opacity: 1, x: 0 }, { opacity: 0, x: -60, duration: 0.6, ease: "none", immediateRender: false }, 0.1)
+        .fromTo(circleRef.current, { opacity: 1, scale: 1 }, { opacity: 0, scale: 0.6, duration: 0.6, ease: "none", immediateRender: false }, 0.05);
     }, sectionRef);
 
     return () => ctx.revert();
@@ -65,12 +92,13 @@ export function Hero() {
       ref={sectionRef}
       style={{
         position: "relative",
-        minHeight: "200dvh",
+        minHeight: "140dvh",
         background: "#000",
         overflow: "hidden",
+        zIndex: 1,
       }}
     >
-      {/* Fixed content container */}
+      {/* ── FRAME 1: Full viewport hero ── */}
       <div style={{
         position: "sticky",
         top: 0,
@@ -124,6 +152,7 @@ export function Hero() {
           }}
         />
 
+        {/* Center content */}
         <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px", maxWidth: 1100 }}>
           {/* Badge */}
           <div
@@ -153,11 +182,10 @@ export function Hero() {
             ref={headlineRef}
             style={{
               fontSize: "clamp(48px, 10vw, 130px)",
-              fontWeight: 700,
+              fontWeight: 900,
               letterSpacing: "-0.05em",
               lineHeight: 0.9,
               color: "#fff",
-              marginBottom: 24,
             }}
           >
             Vibe it.
@@ -167,79 +195,117 @@ export function Hero() {
             Ship it.
           </h1>
 
-          {/* Subtitle */}
-          <p
-            ref={subRef}
-            style={{
-              fontSize: "clamp(16px, 2vw, 20px)",
-              color: "rgba(255,255,255,0.3)",
-              maxWidth: 540,
-              margin: "0 auto 32px",
-              lineHeight: 1.6,
-              fontWeight: 300,
-            }}
-          >
-            AI-accelerated development. Production-grade backend systems.
-          </p>
-
-          {/* CTA */}
-          <div
-            ref={ctaRef}
-            style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap" }}
-          >
-            <a
-              href="#work"
+          {/* Animated scroll indicator */}
+          <div style={{ marginTop: 40, display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.2)", fontWeight: 500 }}>
+              Scroll
+            </span>
+            <div
               style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                background: "#fff", color: "#000",
-                padding: "16px 40px", borderRadius: 9999,
-                fontSize: 15, fontWeight: 600,
-                textDecoration: "none",
-                transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+                width: 1, height: 40,
+                background: "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)",
+                animation: "float 2s ease-in-out infinite",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#2563EB"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "scale(1.05)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#000"; e.currentTarget.style.transform = "scale(1)"; }}
-            >
-              Explore Work
-            </a>
-            <a
-              href="#contact"
-              style={{
-                display: "inline-flex", alignItems: "center",
-                color: "rgba(255,255,255,0.6)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                padding: "16px 40px", borderRadius: 9999,
-                fontSize: 15, fontWeight: 500,
-                textDecoration: "none",
-                transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}
-            >
-              Get in Touch
-            </a>
+            />
           </div>
         </div>
 
-        {/* Scroll hint */}
-        <div
-          ref={scrollHintRef}
+        {/* Left side subtitle */}
+        <p
+          ref={subRef}
           style={{
-            position: "absolute", bottom: 40,
-            display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
+            position: "absolute",
+            left: 32,
+            bottom: 48,
+            fontSize: 13,
+            fontWeight: 400,
+            letterSpacing: "0.04em",
+            color: "rgba(255,255,255,0.2)",
+            lineHeight: 1.7,
+            maxWidth: 280,
+            textAlign: "left",
           }}
         >
-          <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.2)", fontWeight: 500 }}>
-            Scroll
-          </span>
-          <div
-            style={{
-              width: 1, height: 40,
-              background: "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)",
-              animation: "float 2s ease-in-out infinite",
-            }}
+          AI-accelerated development.
+          <br />
+          Production-grade backend systems.
+        </p>
+
+        {/* Right side rotating circle */}
+        <div
+          ref={circleRef}
+          style={{
+            position: "absolute",
+            right: 32,
+            bottom: 32,
+            width: 160,
+            height: 160,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <RotatingCircleText
+            text="VIBE CODING · BACKEND ENGINEERING · VIBE CODING · BACKEND ENGINEERING · "
+            size={160}
           />
+          <div style={{
+            position: "absolute",
+            width: 8, height: 8,
+            borderRadius: "50%",
+            background: "#2563EB",
+          }} />
         </div>
+      </div>
+
+      {/* ── FRAME 2: CTA buttons — below the hero viewport, scrolls into view ── */}
+      <div
+        ref={ctaRef}
+        style={{
+          position: "relative",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 16,
+          paddingTop: 80,
+          paddingBottom: 80,
+        }}
+      >
+        <a
+          href="#work"
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            background: "#fff", color: "#000",
+            padding: "14px 32px", borderRadius: 9999,
+            fontSize: 14, fontWeight: 600,
+            textDecoration: "none",
+            transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+            whiteSpace: "nowrap",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "#2563EB"; e.currentTarget.style.color = "#fff"; e.currentTarget.style.transform = "scale(1.05)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "#fff"; e.currentTarget.style.color = "#000"; e.currentTarget.style.transform = "scale(1)"; }}
+        >
+          Explore Work
+        </a>
+        <a
+          href="#contact"
+          style={{
+            display: "inline-flex", alignItems: "center",
+            color: "rgba(255,255,255,0.6)",
+            border: "1px solid rgba(255,255,255,0.15)",
+            padding: "14px 32px", borderRadius: 9999,
+            fontSize: 14, fontWeight: 500,
+            textDecoration: "none",
+            transition: "all 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+            whiteSpace: "nowrap",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.05)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.15)"; }}
+        >
+          Get in Touch
+        </a>
       </div>
     </section>
   );

@@ -29,7 +29,7 @@ export function Contact() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="contact" style={{ background: "#000", padding: "160px 0 80px", position: "relative", overflow: "hidden" }}>
+    <section ref={sectionRef} id="contact" style={{ background: "#000", padding: "160px 0 80px", position: "relative", overflow: "hidden", zIndex: 5 }}>
       {/* Glow */}
       <div style={{
         position: "absolute", top: "40%", left: "50%",

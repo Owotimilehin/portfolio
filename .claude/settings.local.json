@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.apple.com)",
+      "WebFetch(domain:academy.zyonel.com)",
+      "Bash(cd \"C:/Users/owoti/Documents/PROJECTS/PORTFOLIO\" && npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack 2>&1)",
+      "Bash(cd \"C:/Users/owoti/Documents/PROJECTS/PORTFOLIO\" && npm init -y 2>&1 && npm pkg set name=\"owoigbe-portfolio\" 2>&1)",
+      "Bash(cd \"C:/Users/owoti/Documents/PROJECTS/PORTFOLIO\" && npm install next@latest react@latest react-dom@latest typescript @types/react @types/node framer-motion tailwindcss @tailwindcss/postcss postcss lucide-react clsx tailwind-merge 2>&1)",
+      "Bash(tail:*)",
+      "Bash(cd:*)",
+      "Bash(taskkill:*)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && npm install gsap @gsap/react 2>&1)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && npx next dev -p 3005 2>&1)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && gh auth status 2>&1)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && gh repo create portfolio --public --source=. --push=false 2>&1)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && git remote add origin https://github.com/Owotimilehin/portfolio.git 2>&1 && git push -u origin main 2>&1)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && git push -u origin main 2>&1)",
+      "Bash(npx vercel:*)",
+      "Bash(ls:*)",
+      "Bash(head:*)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && npx next build 2>&1)",
+      "Bash(cd /c/Users/owoti/Documents/PROJECTS/PORTFOLIO && npx next start -p 3005 2>&1)",
+      "Bash(sleep 4:*)",
+      "Bash(sleep 3:*)",
+      "Bash(sleep 8:*)"
+    ]
+  }
+}

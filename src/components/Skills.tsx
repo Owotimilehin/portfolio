@@ -200,6 +200,7 @@ export function Skills() {
     <section ref={sectionRef} id="skills" style={{
       background: "#000", padding: "120px 0",
       position: "relative", overflow: "hidden",
+      zIndex: 3,
     }}>
       {/* Background glow */}
       <div style={{

@@ -49,15 +49,15 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Parallax the headline as you scroll
+      // Parallax exit on scroll
       if (headRef.current) {
         gsap.to(headRef.current, {
           y: -120, opacity: 0, scale: 0.9,
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top top",
-            end: "80% top",
+            start: "40% top",
+            end: "bottom top",
             scrub: 1,
           },
         });
@@ -69,23 +69,23 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "20% top",
-            end: "60% top",
+            start: "40% top",
+            end: "bottom top",
             scrub: 1,
           },
         });
       }
 
-      // Mockup scales up as you scroll
+      // Mockup entrance
       if (mockupRef.current) {
         gsap.from(mockupRef.current, {
-          scale: 0.8, opacity: 0, y: 100,
-          ease: "none",
+          scale: 0.85, opacity: 0, y: 60,
+          duration: 1,
+          ease: "power3.out",
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "10% top",
-            end: "50% top",
-            scrub: 1,
+            trigger: mockupRef.current,
+            start: "top 90%",
+            toggleActions: "play none none none",
           },
         });
       }
@@ -97,9 +97,10 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
   return (
     <section ref={sectionRef} style={{
       position: "relative",
-      minHeight: "250dvh",
+      minHeight: "150dvh",
       background: "#000",
       overflow: "hidden",
+      zIndex: 1,
     }}>
       <div style={{
         position: "sticky", top: 0,
@@ -152,7 +153,7 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
             transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             style={{
               fontSize: "clamp(48px, 10vw, 120px)",
-              fontWeight: 700,
+              fontWeight: 800,
               letterSpacing: "-0.05em",
               lineHeight: 0.9,
               color: "#fff",
@@ -205,7 +206,7 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
           )}
         </div>
 
-        {/* Mockup appears on scroll */}
+        {/* Mockup */}
         <div ref={mockupRef} style={{
           position: "absolute",
           bottom: "-5%",
@@ -222,42 +223,38 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
 }
 
 /* ───────────────────────────────────────────
-   SECTION 2: THE CHALLENGE — SCROLL REVEAL
+   SECTION 2: THE CHALLENGE
    ─────────────────────────────────────────── */
 function ChallengeSection({ project }: { project: Project }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.from(titleRef.current, {
-          y: 100, opacity: 0,
-          ease: "none",
-          scrollTrigger: { trigger: titleRef.current, start: "top 85%", end: "top 50%", scrub: 1 },
+      const items = sectionRef.current!.querySelectorAll(".challenge-reveal");
+      items.forEach((item, i) => {
+        gsap.from(item, {
+          y: 40, opacity: 0,
+          duration: 0.7,
+          delay: i * 0.08,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
         });
-      }
-
-      if (cardsRef.current) {
-        const cards = cardsRef.current.children;
-        gsap.from(cards, {
-          y: 60, opacity: 0, stagger: 0.1,
-          ease: "none",
-          scrollTrigger: { trigger: cardsRef.current, start: "top 80%", end: "top 40%", scrub: 1 },
-        });
-      }
+      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ background: "#0a0a0a", padding: "120px 0", position: "relative" }}>
+    <section ref={sectionRef} style={{ background: "#0a0a0a", padding: "120px 0", position: "relative", zIndex: 2 }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
-        <div style={{ textAlign: "center", marginBottom: 64 }}>
+        <div className="challenge-reveal" style={{ textAlign: "center", marginBottom: 64 }}>
           <p style={{
             fontSize: 11, fontFamily: "monospace", fontWeight: 600,
             letterSpacing: "0.3em", textTransform: "uppercase",
@@ -265,7 +262,7 @@ function ChallengeSection({ project }: { project: Project }) {
           }}>
             The Challenge
           </p>
-          <h2 ref={titleRef} style={{
+          <h2 style={{
             fontSize: "clamp(32px, 5vw, 56px)",
             fontWeight: 700, letterSpacing: "-0.03em",
             color: "#fff", lineHeight: 0.95,
@@ -274,13 +271,13 @@ function ChallengeSection({ project }: { project: Project }) {
           </h2>
         </div>
 
-        <div ref={cardsRef} style={{
+        <div style={{
           display: "grid",
           gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: 16,
         }}>
           {project.problems.map((problem, i) => (
-            <div key={i} style={{
+            <div key={i} className="challenge-reveal" style={{
               display: "flex", alignItems: "flex-start", gap: 16,
               padding: 24, borderRadius: 16,
               background: "rgba(255,255,255,0.02)",
@@ -305,31 +302,28 @@ function ChallengeSection({ project }: { project: Project }) {
 }
 
 /* ───────────────────────────────────────────
-   SECTION 3: FEATURES — PINNED SCROLL
+   SECTION 3: FEATURES
    ─────────────────────────────────────────── */
 function FeaturesSection({ project }: { project: Project }) {
   const sectionRef = useRef<HTMLElement>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.from(titleRef.current, {
-          y: 80, opacity: 0,
-          ease: "none",
-          scrollTrigger: { trigger: titleRef.current, start: "top 85%", end: "top 55%", scrub: 1 },
+      const items = sectionRef.current!.querySelectorAll(".feature-reveal");
+      items.forEach((item, i) => {
+        gsap.from(item, {
+          y: 50, opacity: 0,
+          duration: 0.7,
+          delay: i * 0.06,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
         });
-      }
-
-      // Animate feature cards
-      const cards = sectionRef.current!.querySelectorAll(".feature-card");
-      gsap.from(cards, {
-        y: 80, opacity: 0, scale: 0.95,
-        stagger: 0.08,
-        ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "20% bottom", end: "60% bottom", scrub: 1 },
       });
     }, sectionRef);
 
@@ -337,7 +331,7 @@ function FeaturesSection({ project }: { project: Project }) {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ background: "#000", padding: "120px 0", position: "relative", overflow: "hidden" }}>
+    <section ref={sectionRef} style={{ background: "#000", padding: "120px 0", position: "relative", overflow: "hidden", zIndex: 3 }}>
       {/* Glow */}
       <div style={{
         position: "absolute", top: "50%", left: "50%",
@@ -348,7 +342,7 @@ function FeaturesSection({ project }: { project: Project }) {
       }} />
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", position: "relative" }}>
-        <div style={{ textAlign: "center", marginBottom: 80 }}>
+        <div className="feature-reveal" style={{ textAlign: "center", marginBottom: 80 }}>
           <p style={{
             fontSize: 11, fontFamily: "monospace", fontWeight: 600,
             letterSpacing: "0.3em", textTransform: "uppercase",
@@ -356,7 +350,7 @@ function FeaturesSection({ project }: { project: Project }) {
           }}>
             What I Built
           </p>
-          <h2 ref={titleRef} style={{
+          <h2 style={{
             fontSize: "clamp(32px, 5vw, 56px)",
             fontWeight: 700, letterSpacing: "-0.03em",
             color: "#fff", lineHeight: 0.95,
@@ -373,7 +367,7 @@ function FeaturesSection({ project }: { project: Project }) {
           {project.features.map((feature, i) => {
             const FeatureIcon = Icon(feature.icon);
             return (
-              <div key={i} className="feature-card" style={{
+              <div key={i} className="feature-reveal" style={{
                 padding: 32, borderRadius: 20,
                 background: "rgba(255,255,255,0.02)",
                 border: "1px solid rgba(255,255,255,0.05)",
@@ -424,18 +418,19 @@ function TechSection({ project }: { project: Project }) {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      const items = sectionRef.current!.querySelectorAll(".tech-item");
-      gsap.from(items, {
-        x: -40, opacity: 0, stagger: 0.06,
-        ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 75%", end: "40% 50%", scrub: 1 },
-      });
-
-      const archItems = sectionRef.current!.querySelectorAll(".arch-item");
-      gsap.from(archItems, {
-        x: 40, opacity: 0, stagger: 0.06,
-        ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 75%", end: "40% 50%", scrub: 1 },
+      const items = sectionRef.current!.querySelectorAll(".tech-reveal");
+      items.forEach((item, i) => {
+        gsap.from(item, {
+          y: 30, opacity: 0,
+          duration: 0.6,
+          delay: i * 0.05,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 92%",
+            toggleActions: "play none none none",
+          },
+        });
       });
     }, sectionRef);
 
@@ -443,12 +438,12 @@ function TechSection({ project }: { project: Project }) {
   }, []);
 
   return (
-    <section ref={sectionRef} style={{ background: "#0a0a0a", padding: "120px 0" }}>
+    <section ref={sectionRef} style={{ background: "#0a0a0a", padding: "120px 0", position: "relative", zIndex: 4 }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 64 }} className="lg:!grid-cols-2">
           {/* Tech Stack */}
           <div>
-            <p style={{
+            <p className="tech-reveal" style={{
               fontSize: 11, fontFamily: "monospace", fontWeight: 600,
               letterSpacing: "0.3em", textTransform: "uppercase",
               color: "rgba(255,255,255,0.2)", marginBottom: 32,
@@ -457,7 +452,7 @@ function TechSection({ project }: { project: Project }) {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               {project.techStack.map((tech, i) => (
-                <div key={i} className="tech-item" style={{
+                <div key={i} className="tech-reveal" style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "14px 20px", borderRadius: 12,
                   background: "rgba(255,255,255,0.02)",
@@ -475,7 +470,7 @@ function TechSection({ project }: { project: Project }) {
 
           {/* Architecture */}
           <div>
-            <p style={{
+            <p className="tech-reveal" style={{
               fontSize: 11, fontFamily: "monospace", fontWeight: 600,
               letterSpacing: "0.3em", textTransform: "uppercase",
               color: "rgba(255,255,255,0.2)", marginBottom: 32,
@@ -484,7 +479,7 @@ function TechSection({ project }: { project: Project }) {
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {project.architecturePoints.map((point, i) => (
-                <div key={i} className="arch-item" style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
+                <div key={i} className="tech-reveal" style={{ display: "flex", alignItems: "flex-start", gap: 16 }}>
                   <span style={{
                     minWidth: 32, height: 32, borderRadius: 8,
                     display: "flex", alignItems: "center", justifyContent: "center",
@@ -508,7 +503,7 @@ function TechSection({ project }: { project: Project }) {
 }
 
 /* ───────────────────────────────────────────
-   SECTION 5: IMPACT METRICS — BIG NUMBERS
+   SECTION 5: IMPACT METRICS
    ─────────────────────────────────────────── */
 function MetricsSection({ project }: { project: Project }) {
   const sectionRef = useRef<HTMLElement>(null);
@@ -517,12 +512,19 @@ function MetricsSection({ project }: { project: Project }) {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      const items = sectionRef.current!.querySelectorAll(".metric-item");
-      gsap.from(items, {
-        y: 60, opacity: 0, scale: 0.9,
-        stagger: 0.1,
-        ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 80%", end: "top 40%", scrub: 1 },
+      const items = sectionRef.current!.querySelectorAll(".metric-reveal");
+      items.forEach((item, i) => {
+        gsap.from(item, {
+          y: 40, opacity: 0, scale: 0.95,
+          duration: 0.7,
+          delay: i * 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
+        });
       });
     }, sectionRef);
 
@@ -532,7 +534,7 @@ function MetricsSection({ project }: { project: Project }) {
   return (
     <section ref={sectionRef} style={{
       background: "#000", padding: "120px 0",
-      position: "relative", overflow: "hidden",
+      position: "relative", overflow: "hidden", zIndex: 5,
     }}>
       {/* Glow */}
       <div style={{
@@ -567,7 +569,7 @@ function MetricsSection({ project }: { project: Project }) {
           gap: 32,
         }}>
           {project.metrics.map((metric, i) => (
-            <div key={i} className="metric-item" style={{ textAlign: "center", padding: "40px 0" }}>
+            <div key={i} className="metric-reveal" style={{ textAlign: "center", padding: "40px 0" }}>
               <div style={{
                 fontSize: "clamp(48px, 6vw, 80px)",
                 fontWeight: 700, color: project.accentColor,
@@ -605,9 +607,14 @@ function NextProjectCTA({ project, index }: { project: Project; index: number })
 
     const ctx = gsap.context(() => {
       gsap.from(ctaRef.current, {
-        y: 80, opacity: 0,
-        ease: "none",
-        scrollTrigger: { trigger: ctaRef.current, start: "top 85%", end: "top 55%", scrub: 1 },
+        y: 60, opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ctaRef.current,
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
       });
     });
 
@@ -615,7 +622,7 @@ function NextProjectCTA({ project, index }: { project: Project; index: number })
   }, []);
 
   return (
-    <section style={{ background: "#000", padding: "120px 0 80px", position: "relative" }}>
+    <section style={{ background: "#000", padding: "120px 0 80px", position: "relative", zIndex: 6 }}>
       {/* Divider */}
       <div style={{
         height: 1, maxWidth: 1100, margin: "0 auto 80px",

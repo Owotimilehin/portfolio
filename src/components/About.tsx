@@ -37,7 +37,7 @@ export function About() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="about" style={{ background: "#0a0a0a", padding: "120px 0", position: "relative", overflow: "hidden" }}>
+    <section ref={sectionRef} id="about" style={{ background: "#0a0a0a", padding: "120px 0", position: "relative", overflow: "hidden", zIndex: 4 }}>
       {/* Background glow */}
       <div style={{
         position: "absolute", top: "50%", right: "-10%",

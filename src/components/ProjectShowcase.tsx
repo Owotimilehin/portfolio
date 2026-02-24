@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -29,12 +28,11 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
       gsap.from(cardRef.current, {
         y: 80,
         opacity: 0,
-        scale: 0.97,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: cardRef.current,
-          start: "top 92%",
+          start: "top 85%",
           toggleActions: "play none none none",
         },
       });
@@ -51,21 +49,18 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         <div
           style={{
             position: "relative",
-            padding: "60px 48px",
+            padding: "48px 40px",
             borderRadius: 24,
             background: "rgba(255,255,255,0.02)",
             border: "1px solid rgba(255,255,255,0.06)",
             overflow: "hidden",
             cursor: "pointer",
-            transition: "all 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
-            minHeight: 400,
-            display: "flex",
-            alignItems: "center",
+            transition: "background 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+            e.currentTarget.style.background = "rgba(255,255,255,0.05)";
             e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
-            e.currentTarget.style.transform = "translateY(-8px)";
+            e.currentTarget.style.transform = "translateY(-4px)";
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = "rgba(255,255,255,0.02)";
@@ -76,17 +71,17 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           {/* Background glow */}
           <div style={{
             position: "absolute",
-            top: "50%", right: "-10%",
+            top: "50%", right: "-5%",
             transform: "translateY(-50%)",
-            width: 500, height: 500,
+            width: 400, height: 400,
             borderRadius: "50%",
             background: meta.visual,
-            filter: "blur(200px)",
+            filter: "blur(180px)",
             opacity: 0.06,
             pointerEvents: "none",
           }} />
 
-          <div style={{ position: "relative", zIndex: 1, width: "100%", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "center" }} className="lg:!grid-cols-2">
+          <div style={{ position: "relative", zIndex: 1, display: "grid", gridTemplateColumns: "1fr", gap: 32, alignItems: "center" }} className="md:!grid-cols-2">
             {/* Text side */}
             <div>
               <span style={{
@@ -94,18 +89,18 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
                 fontSize: 11, fontFamily: "monospace", fontWeight: 600,
                 letterSpacing: "0.2em", textTransform: "uppercase",
                 color: meta.visual,
-                marginBottom: 20,
+                marginBottom: 16,
               }}>
                 {String(index + 1).padStart(2, "0")}
               </span>
 
               <h3 style={{
-                fontSize: "clamp(32px, 4vw, 56px)",
+                fontSize: "clamp(28px, 4vw, 48px)",
                 fontWeight: 700,
                 letterSpacing: "-0.03em",
-                lineHeight: 0.95,
+                lineHeight: 1,
                 color: "#fff",
-                marginBottom: 16,
+                marginBottom: 12,
               }}>
                 {meta.tagline}
               </h3>
@@ -113,7 +108,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
               <p style={{
                 fontSize: 14,
                 color: "rgba(255,255,255,0.3)",
-                marginBottom: 32,
+                marginBottom: 24,
                 lineHeight: 1.6,
                 maxWidth: 360,
               }}>
@@ -127,43 +122,35 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
                 fontSize: 14,
                 fontWeight: 500,
                 color: meta.visual,
-                transition: "gap 0.3s",
               }}>
                 View Project <ArrowRight size={16} />
               </div>
             </div>
 
-            {/* Visual side — abstract shape */}
+            {/* Visual side */}
             <div style={{
               position: "relative",
               aspectRatio: "4/3",
               borderRadius: 16,
-              background: "#111",
+              background: "#0a0a0a",
               overflow: "hidden",
               border: "1px solid rgba(255,255,255,0.06)",
             }}>
-              {/* Mini mockup preview */}
               <div style={{
                 position: "absolute", inset: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
-                {/* Abstract geometric pattern unique to each project */}
                 <svg viewBox="0 0 400 300" fill="none" style={{ width: "100%", height: "100%" }}>
-                  {/* Grid bg */}
                   <rect width="400" height="300" fill="#0a0a0a" />
-                  {/* Accent orb */}
                   <circle cx={200 + index * 15} cy={150} r={120} fill={meta.visual} opacity={0.04} />
                   <circle cx={200 + index * 15} cy={150} r={60} fill={meta.visual} opacity={0.08} />
 
-                  {/* Dynamic shapes based on project */}
                   {index === 0 && <>
-                    {/* Health — cross shape */}
                     <rect x="185" y="80" width="30" height="140" rx="6" fill={meta.visual} opacity="0.3" />
                     <rect x="130" y="135" width="140" height="30" rx="6" fill={meta.visual} opacity="0.3" />
-                    {[0,1,2].map(i => <rect key={i} x={140+i*50} y={220+i*5} width={120-i*30} height="8" rx="4" fill={meta.visual} opacity={0.15-i*0.03} />)}
+                    {[0,1,2].map(j => <rect key={j} x={140+j*50} y={220+j*5} width={120-j*30} height="8" rx="4" fill={meta.visual} opacity={0.15-j*0.03} />)}
                   </>}
                   {index === 1 && <>
-                    {/* Community — connected nodes */}
                     <circle cx="200" cy="130" r="24" fill={meta.visual} opacity="0.2" />
                     <circle cx="140" cy="190" r="16" fill={meta.visual} opacity="0.15" />
                     <circle cx="260" cy="190" r="16" fill={meta.visual} opacity="0.15" />
@@ -175,23 +162,20 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
                     <line x1="200" y1="130" x2="240" y2="90" stroke={meta.visual} strokeWidth="2" opacity="0.15" />
                   </>}
                   {index === 2 && <>
-                    {/* Luxury — diamond/gem */}
                     <polygon points="200,60 280,150 200,240 120,150" fill="none" stroke={meta.visual} strokeWidth="2" opacity="0.25" />
                     <polygon points="200,90 250,150 200,210 150,150" fill={meta.visual} opacity="0.08" />
                     <line x1="200" y1="60" x2="200" y2="240" stroke={meta.visual} strokeWidth="1" opacity="0.1" />
                     <line x1="120" y1="150" x2="280" y2="150" stroke={meta.visual} strokeWidth="1" opacity="0.1" />
                   </>}
                   {index === 3 && <>
-                    {/* Learning — ascending steps */}
-                    {[0,1,2,3,4].map(i => (
-                      <rect key={i} x={100+i*45} y={220-i*35} width="35" height={35+i*35} rx="4" fill={meta.visual} opacity={0.08+i*0.04} />
+                    {[0,1,2,3,4].map(j => (
+                      <rect key={j} x={100+j*45} y={220-j*35} width="35" height={35+j*35} rx="4" fill={meta.visual} opacity={0.08+j*0.04} />
                     ))}
                     <circle cx="300" cy="80" r="20" fill={meta.visual} opacity="0.15" />
                   </>}
                 </svg>
               </div>
 
-              {/* Shine overlay */}
               <div style={{
                 position: "absolute", inset: 0,
                 background: "linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%, rgba(255,255,255,0.01) 100%)",
@@ -229,10 +213,10 @@ export function ProjectShowcase() {
   }, []);
 
   return (
-    <section id="work" style={{ background: "#000", padding: "0 0 120px", position: "relative" }}>
+    <section id="work" style={{ background: "#000", position: "relative", zIndex: 2, padding: "0 0 120px" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px" }}>
-        {/* Section title — minimal */}
-        <div ref={titleRef} style={{ textAlign: "center", marginBottom: 80 }}>
+        {/* Section title */}
+        <div ref={titleRef} style={{ textAlign: "center", paddingTop: 120, paddingBottom: 80 }}>
           <p style={{
             fontSize: 11, fontFamily: "monospace", fontWeight: 600,
             letterSpacing: "0.3em", textTransform: "uppercase",
@@ -253,7 +237,7 @@ export function ProjectShowcase() {
           </h2>
         </div>
 
-        {/* Project cards */}
+        {/* Project cards — simple vertical stack */}
         <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
           {projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
