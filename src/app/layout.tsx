@@ -2,21 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Owoigbe Timilehin — Senior Backend Engineer",
+  title: "Owoigbe Timilehin — Vibe Coder | Backend Engineer",
   description:
-    "AI-augmented Backend Engineer building scalable platforms for health, commerce, and communities. Laravel, Next.js, TypeScript, PostgreSQL.",
+    "Vibe Coder with deep backend hands-on experience. AI-accelerated development meets production-grade systems. Laravel, Next.js, TypeScript, PostgreSQL.",
   keywords: [
+    "Vibe Coder",
     "Backend Engineer",
     "Laravel Developer",
+    "AI Developer",
     "API Architecture",
     "Full Stack Developer",
     "Lagos Nigeria",
     "Owoigbe Timilehin",
   ],
   openGraph: {
-    title: "Owoigbe Timilehin — Senior Backend Engineer",
+    title: "Owoigbe Timilehin — Vibe Coder | Backend Engineer",
     description:
-      "Building scalable platforms for health, commerce, and communities.",
+      "AI-accelerated development. Production-grade backend systems.",
     type: "website",
   },
 };

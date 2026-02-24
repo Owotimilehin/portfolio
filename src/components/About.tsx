@@ -71,8 +71,12 @@ export function About() {
           textAlign: "center",
           marginBottom: 40,
         }}>
-          {personalInfo.name.split(" ")[0]}
+          Vibe Coder
           <span style={{ color: "rgba(255,255,255,0.15)" }}>.</span>
+          <br />
+          <span style={{ fontSize: "clamp(20px, 3vw, 36px)", color: "rgba(255,255,255,0.25)", fontWeight: 500 }}>
+            Backend hands-on.
+          </span>
         </h2>
 
         <p ref={textRef} style={{
@@ -83,7 +87,7 @@ export function About() {
           maxWidth: 680,
           margin: "0 auto 48px",
         }}>
-          Senior Backend Engineer at Waystream. I design scalable APIs and complex backend systems — from payment integrations to SSO authentication and DTO-driven architectures.
+          I ride the wave of AI-accelerated development while keeping my hands dirty in real production systems. Laravel APIs, payment integrations, SSO auth, queue-driven architectures. The vibe is fast, the code is solid, the systems scale.
         </p>
 
         {/* Skills — minimal pills */}

@@ -249,9 +249,9 @@ export function ProjectShowcase() {
             color: "#fff",
             lineHeight: 0.95,
           }}>
-            Four products.
+            Vibed &amp; shipped.
             <br />
-            <span style={{ color: "rgba(255,255,255,0.15)" }}>Real impact.</span>
+            <span style={{ color: "rgba(255,255,255,0.15)" }}>Battle-tested.</span>
           </h2>
         </div>
 

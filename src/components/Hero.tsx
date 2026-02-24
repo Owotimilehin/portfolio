@@ -135,7 +135,7 @@ export function Hero() {
               }} />
               <span style={{ position: "relative", display: "inline-flex", width: 8, height: 8, borderRadius: "50%", background: "#10B981" }} />
             </span>
-            Available for work
+            Vibe Coder &middot; Backend Engineer
           </div>
 
           {/* Massive headline */}
@@ -150,11 +150,11 @@ export function Hero() {
               marginBottom: 32,
             }}
           >
-            Build.
+            Vibe it.
             <br />
-            <span className="text-shimmer">Ship.</span>
+            <span className="text-shimmer">Build it.</span>
             <br />
-            Scale.
+            Ship it.
           </h1>
 
           {/* Subtitle */}
@@ -163,13 +163,13 @@ export function Hero() {
             style={{
               fontSize: "clamp(16px, 2vw, 20px)",
               color: "rgba(255,255,255,0.3)",
-              maxWidth: 500,
+              maxWidth: 540,
               margin: "0 auto 48px",
               lineHeight: 1.6,
               fontWeight: 300,
             }}
           >
-            Backend systems that power real businesses.
+            AI-accelerated development. Production-grade backend systems.
           </p>
 
           {/* CTA */}

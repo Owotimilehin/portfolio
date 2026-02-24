@@ -1,12 +1,12 @@
 export const personalInfo = {
   name: "Owoigbe Timilehin",
   initials: "OT",
-  title: "Senior Backend Engineer",
-  subtitle: "Vibe Coder",
+  title: "Vibe Coder",
+  subtitle: "Backend Engineer",
   location: "Lagos, Nigeria",
   email: "owotimilehin@gmail.com",
   phone: "+234 906 724 3320",
-  bio: "AI-augmented Backend Engineer with strong architectural judgment and a production mindset. I design scalable APIs and complex backend systems — from Stripe payment customization to SSO authentication, RSS feed parsing, and DTO-driven architectures. I leverage AI strategically to accelerate development while critically evaluating outputs to deliver clean, scalable, business-aligned solutions.",
+  bio: "Vibe Coder with deep backend hands-on experience. I ride the wave of AI-accelerated development while keeping my hands dirty in real production systems — Laravel APIs, payment integrations, SSO auth, queue-driven architectures. I don't just prompt and pray. I architect, I debug, I ship. The vibe is fast, the code is solid, the systems scale.",
   education: [
     {
       institution: "University of Lagos",
@@ -34,6 +34,7 @@ export const personalInfo = {
     ],
   },
   skills: [
+    "Vibe Coding",
     "PHP & Laravel",
     "RESTful API Design",
     "PostgreSQL & MySQL",
@@ -42,7 +43,7 @@ export const personalInfo = {
     "TypeScript & Next.js",
     "Payment Integrations",
     "SSO & Authentication",
-    "AI-Assisted Development",
+    "AI-Accelerated Dev",
     "System Architecture",
   ],
 };
