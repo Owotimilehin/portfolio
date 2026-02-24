@@ -33,7 +33,7 @@ export function ProjectSection({ project, index }: { project: Project; index: nu
   return (
     <section id={`project-${project.id}`}>
       {/* ─── PROJECT HERO ─── */}
-      <div style={{ background: "#000", minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden" }}>
+      <div style={{ background: "#000", minHeight: "100dvh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden" }}>
         {/* Gradient bg */}
         <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)", width: 1000, height: 600, borderRadius: "50%", background: project.accentColor, filter: "blur(200px)", opacity: 0.12, pointerEvents: "none" }} />
 

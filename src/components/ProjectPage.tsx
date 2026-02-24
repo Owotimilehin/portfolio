@@ -97,13 +97,13 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
   return (
     <section ref={sectionRef} style={{
       position: "relative",
-      minHeight: "250vh",
+      minHeight: "250dvh",
       background: "#000",
       overflow: "hidden",
     }}>
       <div style={{
         position: "sticky", top: 0,
-        height: "100vh",
+        height: "100dvh",
         display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
         overflow: "hidden",

@@ -45,6 +45,8 @@ html {
   scroll-behavior: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Fix mobile viewport — dvh accounts for browser chrome */
+  --vh-full: 100dvh;
 }
 
 body {
@@ -137,4 +139,19 @@ body {
 }
 .reveal-mask.revealed {
   clip-path: inset(0 0 0% 0);
+}
+
+/* Book-opening project showcase */
+.book-container {
+  perspective: 1200px;
+  perspective-origin: center center;
+}
+
+.book-page {
+  position: absolute;
+  inset: 0;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
 }

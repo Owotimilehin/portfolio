@@ -23,11 +23,21 @@ export function Hero() {
       // ── ENTRANCE ANIMATIONS (on load) ──
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      tl.from(badgeRef.current, { opacity: 0, y: 20, duration: 0.8 }, 0.2)
-        .from(headlineRef.current, { opacity: 0, y: 60, duration: 1.2 }, 0.4)
-        .from(subRef.current, { opacity: 0, y: 30, duration: 1 }, 0.8)
-        .from(ctaRef.current, { opacity: 0, y: 30, duration: 0.8 }, 1.1)
-        .from(scrollHintRef.current, { opacity: 0, duration: 0.8 }, 2);
+      tl.fromTo(badgeRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8 }, 0.2)
+        .fromTo(headlineRef.current,
+          { opacity: 0, y: 60 },
+          { opacity: 1, y: 0, duration: 1.2 }, 0.4)
+        .fromTo(subRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1 }, 0.8)
+        .fromTo(ctaRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8 }, 1.1)
+        .fromTo(scrollHintRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.8 }, 2);
 
       // ── SCROLL-DRIVEN EXIT + RETURN (scrub = reversible) ──
       const scrollTl = gsap.timeline({
@@ -40,11 +50,11 @@ export function Hero() {
       });
 
       scrollTl
-        .to(badgeRef.current, { opacity: 0, y: -40, duration: 0.3 }, 0)
-        .to(headlineRef.current, { scale: 0.8, opacity: 0, y: -100, duration: 1 }, 0)
-        .to(subRef.current, { opacity: 0, y: -60, duration: 0.6 }, 0.1)
-        .to(ctaRef.current, { opacity: 0, y: -40, duration: 0.5 }, 0.15)
-        .to(scrollHintRef.current, { opacity: 0, duration: 0.3 }, 0);
+        .fromTo(badgeRef.current, { opacity: 1, y: 0 }, { opacity: 0, y: 60, duration: 0.3, ease: "none", immediateRender: false }, 0)
+        .fromTo(headlineRef.current, { opacity: 1, y: 0, scale: 1 }, { opacity: 0, y: 120, scale: 0.95, duration: 1, ease: "none", immediateRender: false }, 0)
+        .fromTo(subRef.current, { opacity: 1, y: 0 }, { opacity: 0, y: 80, duration: 0.6, ease: "none", immediateRender: false }, 0.1)
+        .fromTo(ctaRef.current, { opacity: 1, y: 0 }, { opacity: 0, y: -60, duration: 0.5, ease: "none", immediateRender: false }, 0.15)
+        .fromTo(scrollHintRef.current, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: "none", immediateRender: false }, 0);
     }, sectionRef);
 
     return () => ctx.revert();
@@ -55,7 +65,7 @@ export function Hero() {
       ref={sectionRef}
       style={{
         position: "relative",
-        minHeight: "200vh",
+        minHeight: "200dvh",
         background: "#000",
         overflow: "hidden",
       }}
@@ -64,12 +74,11 @@ export function Hero() {
       <div style={{
         position: "sticky",
         top: 0,
-        height: "100vh",
+        height: "100dvh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        overflow: "hidden",
       }}>
         {/* Animated gradient orbs */}
         <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
@@ -121,10 +130,11 @@ export function Hero() {
             ref={badgeRef}
             style={{
               display: "inline-flex", alignItems: "center", gap: 12,
-              background: "rgba(255,255,255,0.04)", backdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              color: "rgba(255,255,255,0.5)", fontSize: 13,
-              padding: "10px 20px", borderRadius: 9999, marginBottom: 48,
+              background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              color: "rgba(255,255,255,0.7)", fontSize: 14,
+              padding: "10px 24px", borderRadius: 9999, marginBottom: 32,
+              fontWeight: 500,
             }}
           >
             <span style={{ position: "relative", display: "inline-flex", width: 8, height: 8 }}>
@@ -135,19 +145,19 @@ export function Hero() {
               }} />
               <span style={{ position: "relative", display: "inline-flex", width: 8, height: 8, borderRadius: "50%", background: "#10B981" }} />
             </span>
-            Vibe Coder &middot; Backend Engineer
+            Available to work
           </div>
 
           {/* Massive headline */}
           <h1
             ref={headlineRef}
             style={{
-              fontSize: "clamp(56px, 12vw, 160px)",
+              fontSize: "clamp(48px, 10vw, 130px)",
               fontWeight: 700,
               letterSpacing: "-0.05em",
               lineHeight: 0.9,
               color: "#fff",
-              marginBottom: 32,
+              marginBottom: 24,
             }}
           >
             Vibe it.
@@ -164,7 +174,7 @@ export function Hero() {
               fontSize: "clamp(16px, 2vw, 20px)",
               color: "rgba(255,255,255,0.3)",
               maxWidth: 540,
-              margin: "0 auto 48px",
+              margin: "0 auto 32px",
               lineHeight: 1.6,
               fontWeight: 300,
             }}
