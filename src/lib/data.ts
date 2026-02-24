@@ -451,3 +451,67 @@ export const techCategories = [
     items: ["Service Layer", "DTO Pattern", "Event-Driven", "Queue Systems"],
   },
 ];
+
+export interface Skill {
+  name: string;
+  description: string;
+  icon: string;
+  level: number; // 0-100
+}
+
+export interface SkillCategory {
+  category: string;
+  color: string;
+  skills: Skill[];
+}
+
+export const skillCategories: SkillCategory[] = [
+  {
+    category: "Vibe Coding & AI",
+    color: "#8B5CF6",
+    skills: [
+      { name: "Vibe Coding", description: "AI-accelerated full-cycle development — from architecture to deployment, shipping production code at 10x speed.", icon: "Sparkles", level: 95 },
+      { name: "AI-Assisted Automation", description: "Strategic use of ChatGPT, Claude, and Copilot for code generation, refactoring, debugging, and architecture design.", icon: "Brain", level: 90 },
+      { name: "Prompt Engineering", description: "Crafting precise prompts for code generation while critically evaluating AI outputs to prevent over-engineering.", icon: "MessageSquare", level: 90 },
+    ],
+  },
+  {
+    category: "Backend Engineering",
+    color: "#2563EB",
+    skills: [
+      { name: "PHP & Laravel", description: "Laravel 11/12, Eloquent ORM, service containers, middleware, Blade, Artisan — the full ecosystem.", icon: "Code2", level: 95 },
+      { name: "RESTful API Design", description: "Resource-based endpoints, proper HTTP semantics, versioning, pagination, rate limiting, and comprehensive documentation.", icon: "Globe", level: 95 },
+      { name: "SSO & Authentication", description: "Laravel Sanctum, NextAuth v5, JWT tokens, OAuth2 flows, and cross-platform single sign-on implementations.", icon: "Shield", level: 90 },
+      { name: "Payment Integrations", description: "Stripe, Paystack, Flutterwave with webhook verification (HMAC-SHA512), custom flows for unregistered users.", icon: "CreditCard", level: 90 },
+      { name: "Queue & Job Processing", description: "Redis-backed async job processing, database queues, failed job handling, and high-performance background workflows.", icon: "Zap", level: 85 },
+    ],
+  },
+  {
+    category: "Frontend & Scripting",
+    color: "#10B981",
+    skills: [
+      { name: "HTML, CSS, JavaScript", description: "Semantic markup, responsive layouts, modern CSS, vanilla JS, and DOM manipulation fundamentals.", icon: "FileCode", level: 85 },
+      { name: "TypeScript & Next.js", description: "Type-safe React with App Router, SSR/SSG, API routes, server components, and Prisma integration.", icon: "Monitor", level: 80 },
+      { name: "Excel, Google Sheets & App Script", description: "Advanced spreadsheet automation, custom functions, data pipelines, and Google Workspace integrations.", icon: "Table", level: 85 },
+    ],
+  },
+  {
+    category: "Data & Architecture",
+    color: "#C5A253",
+    skills: [
+      { name: "PostgreSQL & MySQL", description: "Schema design, indexing strategies, query optimization, migrations, and database-level constraints.", icon: "Database", level: 90 },
+      { name: "Data Cleaning & Normalization", description: "ETL pipelines, validation rules, data transformation, CSV/JSON parsing, and integrity enforcement.", icon: "Filter", level: 85 },
+      { name: "JSON & CSV Formatting", description: "API response structuring, data export pipelines, feed parsing (RSS 2.0/iTunes), and format transformations.", icon: "FileText", level: 90 },
+      { name: "DTO-Driven Architecture", description: "Prettus repository pattern, thin controllers, fat services, type-safe enums, and event-driven design.", icon: "Layers", level: 90 },
+    ],
+  },
+  {
+    category: "DevOps & Infrastructure",
+    color: "#EF4444",
+    skills: [
+      { name: "Docker", description: "Containerized development and production environments, multi-stage builds, and docker-compose orchestration.", icon: "Container", level: 80 },
+      { name: "DigitalOcean & AWS", description: "Droplet provisioning, S3 storage, SSL configuration, environment optimization, and deployment automation.", icon: "Cloud", level: 80 },
+      { name: "Redis", description: "Caching layer, session management, queue backend, and pub/sub for real-time features.", icon: "Cpu", level: 85 },
+    ],
+  },
+];
