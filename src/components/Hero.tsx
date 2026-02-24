@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -11,21 +10,27 @@ if (typeof window !== "undefined") {
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
-  const badgeRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
+  const scrollHintRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!sectionRef.current || !headlineRef.current) return;
+    if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Pin the hero and scale/fade headline on scroll
-      gsap.to(headlineRef.current, {
-        scale: 0.8,
-        opacity: 0,
-        y: -100,
-        ease: "none",
+      // ── ENTRANCE ANIMATIONS (on load) ──
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      tl.from(badgeRef.current, { opacity: 0, y: 20, duration: 0.8 }, 0.2)
+        .from(headlineRef.current, { opacity: 0, y: 60, duration: 1.2 }, 0.4)
+        .from(subRef.current, { opacity: 0, y: 30, duration: 1 }, 0.8)
+        .from(ctaRef.current, { opacity: 0, y: 30, duration: 0.8 }, 1.1)
+        .from(scrollHintRef.current, { opacity: 0, duration: 0.8 }, 2);
+
+      // ── SCROLL-DRIVEN EXIT + RETURN (scrub = reversible) ──
+      const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top top",
@@ -34,47 +39,12 @@ export function Hero() {
         },
       });
 
-      if (subRef.current) {
-        gsap.to(subRef.current, {
-          opacity: 0,
-          y: -60,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "20% top",
-            end: "60% top",
-            scrub: 1,
-          },
-        });
-      }
-
-      if (badgeRef.current) {
-        gsap.to(badgeRef.current, {
-          opacity: 0,
-          y: -40,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "10% top",
-            end: "40% top",
-            scrub: 1,
-          },
-        });
-      }
-
-      if (ctaRef.current) {
-        gsap.to(ctaRef.current, {
-          opacity: 0,
-          y: -40,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "20% top",
-            end: "50% top",
-            scrub: 1,
-          },
-        });
-      }
+      scrollTl
+        .to(badgeRef.current, { opacity: 0, y: -40, duration: 0.3 }, 0)
+        .to(headlineRef.current, { scale: 0.8, opacity: 0, y: -100, duration: 1 }, 0)
+        .to(subRef.current, { opacity: 0, y: -60, duration: 0.6 }, 0.1)
+        .to(ctaRef.current, { opacity: 0, y: -40, duration: 0.5 }, 0.15)
+        .to(scrollHintRef.current, { opacity: 0, duration: 0.3 }, 0);
     }, sectionRef);
 
     return () => ctx.revert();
@@ -147,11 +117,8 @@ export function Hero() {
 
         <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px", maxWidth: 1100 }}>
           {/* Badge */}
-          <motion.div
+          <div
             ref={badgeRef}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
             style={{
               display: "inline-flex", alignItems: "center", gap: 12,
               background: "rgba(255,255,255,0.04)", backdropFilter: "blur(8px)",
@@ -169,14 +136,11 @@ export function Hero() {
               <span style={{ position: "relative", display: "inline-flex", width: 8, height: 8, borderRadius: "50%", background: "#10B981" }} />
             </span>
             Available for work
-          </motion.div>
+          </div>
 
-          {/* Massive headline — Apple style */}
-          <motion.h1
+          {/* Massive headline */}
+          <h1
             ref={headlineRef}
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             style={{
               fontSize: "clamp(56px, 12vw, 160px)",
               fontWeight: 700,
@@ -191,14 +155,11 @@ export function Hero() {
             <span className="text-shimmer">Ship.</span>
             <br />
             Scale.
-          </motion.h1>
+          </h1>
 
-          {/* Minimal subtitle */}
-          <motion.p
+          {/* Subtitle */}
+          <p
             ref={subRef}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8 }}
             style={{
               fontSize: "clamp(16px, 2vw, 20px)",
               color: "rgba(255,255,255,0.3)",
@@ -209,14 +170,11 @@ export function Hero() {
             }}
           >
             Backend systems that power real businesses.
-          </motion.p>
+          </p>
 
           {/* CTA */}
-          <motion.div
+          <div
             ref={ctaRef}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.1 }}
             style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, flexWrap: "wrap" }}
           >
             <a
@@ -250,14 +208,12 @@ export function Hero() {
             >
               Get in Touch
             </a>
-          </motion.div>
+          </div>
         </div>
 
         {/* Scroll hint */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.5 }}
+        <div
+          ref={scrollHintRef}
           style={{
             position: "absolute", bottom: 40,
             display: "flex", flexDirection: "column", alignItems: "center", gap: 8,
@@ -266,12 +222,14 @@ export function Hero() {
           <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.3em", color: "rgba(255,255,255,0.2)", fontWeight: 500 }}>
             Scroll
           </span>
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            style={{ width: 1, height: 40, background: "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)" }}
+          <div
+            style={{
+              width: 1, height: 40,
+              background: "linear-gradient(to bottom, rgba(255,255,255,0.2), transparent)",
+              animation: "float 2s ease-in-out infinite",
+            }}
           />
-        </motion.div>
+        </div>
       </div>
     </section>
   );
