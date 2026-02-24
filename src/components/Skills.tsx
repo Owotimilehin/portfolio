@@ -33,7 +33,7 @@ function SkillBar({ level, color }: { level: number; color: string }) {
         ease: "power3.out",
         scrollTrigger: {
           trigger: barRef.current,
-          start: "top 90%",
+          start: "top 95%",
           toggleActions: "play none none none",
         },
       });
@@ -61,28 +61,26 @@ function SkillBar({ level, color }: { level: number; color: string }) {
   );
 }
 
-function CategorySection({ category, index }: { category: typeof skillCategories[0]; index: number }) {
+function CategorySection({ category }: { category: typeof skillCategories[0] }) {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const titleRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.from(titleRef.current, {
-          y: 60, opacity: 0,
-          ease: "none",
-          scrollTrigger: { trigger: titleRef.current, start: "top 85%", end: "top 60%", scrub: 1 },
+      const items = sectionRef.current!.querySelectorAll(".skill-reveal");
+      items.forEach((item, i) => {
+        gsap.from(item, {
+          y: 40, opacity: 0,
+          duration: 0.7,
+          delay: i * 0.08,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 92%",
+            toggleActions: "play none none none",
+          },
         });
-      }
-
-      const cards = sectionRef.current!.querySelectorAll(".skill-card");
-      gsap.from(cards, {
-        y: 50, opacity: 0, scale: 0.97,
-        stagger: 0.08,
-        ease: "none",
-        scrollTrigger: { trigger: sectionRef.current, start: "top 80%", end: "40% 60%", scrub: 1 },
       });
     }, sectionRef);
 
@@ -90,11 +88,11 @@ function CategorySection({ category, index }: { category: typeof skillCategories
   }, []);
 
   return (
-    <div ref={sectionRef} style={{ marginBottom: 80 }}>
+    <div ref={sectionRef} style={{ marginBottom: 72 }}>
       {/* Category header */}
-      <div ref={titleRef} style={{
+      <div className="skill-reveal" style={{
         display: "flex", alignItems: "center", gap: 16,
-        marginBottom: 32,
+        marginBottom: 24,
       }}>
         <span style={{
           width: 32, height: 2, borderRadius: 1,
@@ -115,12 +113,12 @@ function CategorySection({ category, index }: { category: typeof skillCategories
         gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
         gap: 16,
       }}>
-        {category.skills.map((skill, i) => {
+        {category.skills.map((skill) => {
           const SkillIcon = iconMap[skill.icon] || Sparkles;
           return (
             <div
               key={skill.name}
-              className="skill-card"
+              className="skill-reveal"
               style={{
                 padding: 28, borderRadius: 20,
                 background: "rgba(255,255,255,0.02)",
@@ -138,7 +136,6 @@ function CategorySection({ category, index }: { category: typeof skillCategories
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              {/* Icon + name row */}
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
                 <div style={{
                   width: 42, height: 42, borderRadius: 12,
@@ -150,17 +147,13 @@ function CategorySection({ category, index }: { category: typeof skillCategories
                   <SkillIcon size={20} />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <h4 style={{
-                    fontSize: 15, fontWeight: 600, color: "#fff",
-                    marginBottom: 4,
-                  }}>
+                  <h4 style={{ fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 4 }}>
                     {skill.name}
                   </h4>
                   <SkillBar level={skill.level} color={category.color} />
                 </div>
               </div>
 
-              {/* Description */}
               <p style={{
                 fontSize: 13, color: "rgba(255,255,255,0.3)",
                 lineHeight: 1.7, paddingLeft: 56,
@@ -176,26 +169,27 @@ function CategorySection({ category, index }: { category: typeof skillCategories
 }
 
 export function Skills() {
-  const heroRef = useRef<HTMLDivElement>(null);
-  const countRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    if (!sectionRef.current) return;
+
     const ctx = gsap.context(() => {
-      if (heroRef.current) {
-        gsap.from(heroRef.current, {
-          y: 80, opacity: 0,
-          ease: "none",
-          scrollTrigger: { trigger: heroRef.current, start: "top 85%", end: "top 55%", scrub: 1 },
+      const headers = sectionRef.current!.querySelectorAll(".skills-header");
+      headers.forEach((item, i) => {
+        gsap.from(item, {
+          y: 50, opacity: 0,
+          duration: 0.8,
+          delay: i * 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 90%",
+            toggleActions: "play none none none",
+          },
         });
-      }
-      if (countRef.current) {
-        gsap.from(countRef.current, {
-          y: 40, opacity: 0,
-          ease: "none",
-          scrollTrigger: { trigger: countRef.current, start: "top 90%", end: "top 65%", scrub: 1 },
-        });
-      }
-    });
+      });
+    }, sectionRef);
 
     return () => ctx.revert();
   }, []);
@@ -203,7 +197,7 @@ export function Skills() {
   const totalSkills = skillCategories.reduce((sum, cat) => sum + cat.skills.length, 0);
 
   return (
-    <section id="skills" style={{
+    <section ref={sectionRef} id="skills" style={{
       background: "#000", padding: "120px 0",
       position: "relative", overflow: "hidden",
     }}>
@@ -218,15 +212,15 @@ export function Skills() {
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", position: "relative" }}>
         {/* Section header */}
-        <div ref={heroRef} style={{ textAlign: "center", marginBottom: 48 }}>
-          <p style={{
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <p className="skills-header" style={{
             fontSize: 11, fontFamily: "monospace", fontWeight: 600,
             letterSpacing: "0.3em", textTransform: "uppercase",
             color: "#2563EB", marginBottom: 24,
           }}>
-            Skills & Tools
+            Skills &amp; Tools
           </p>
-          <h2 style={{
+          <h2 className="skills-header" style={{
             fontSize: "clamp(36px, 6vw, 72px)",
             fontWeight: 700,
             letterSpacing: "-0.04em",
@@ -236,7 +230,7 @@ export function Skills() {
           }}>
             The toolkit<span style={{ color: "rgba(255,255,255,0.15)" }}>.</span>
           </h2>
-          <p style={{
+          <p className="skills-header" style={{
             fontSize: "clamp(15px, 2vw, 18px)",
             color: "rgba(255,255,255,0.25)",
             maxWidth: 500,
@@ -248,7 +242,7 @@ export function Skills() {
         </div>
 
         {/* Quick stats */}
-        <div ref={countRef} style={{
+        <div className="skills-header" style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           gap: 48, marginBottom: 80, flexWrap: "wrap",
         }}>
@@ -282,7 +276,7 @@ export function Skills() {
 
         {/* Skill categories */}
         {skillCategories.map((cat, i) => (
-          <CategorySection key={cat.category} category={cat} index={i} />
+          <CategorySection key={cat.category} category={cat} />
         ))}
       </div>
     </section>

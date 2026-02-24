@@ -27,16 +27,15 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
 
     const ctx = gsap.context(() => {
       gsap.from(cardRef.current, {
-        y: 120,
+        y: 80,
         opacity: 0,
-        scale: 0.95,
+        scale: 0.97,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: cardRef.current,
-          start: "top 85%",
-          end: "top 50%",
-          scrub: 1,
+          start: "top 92%",
+          toggleActions: "play none none none",
         },
       });
     });
@@ -214,15 +213,14 @@ export function ProjectShowcase() {
 
     const ctx = gsap.context(() => {
       gsap.from(titleRef.current, {
-        y: 80,
+        y: 60,
         opacity: 0,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: titleRef.current,
-          start: "top 85%",
-          end: "top 60%",
-          scrub: 1,
+          start: "top 90%",
+          toggleActions: "play none none none",
         },
       });
     });

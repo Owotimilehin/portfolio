@@ -19,9 +19,9 @@ export function Contact() {
 
     const ctx = gsap.context(() => {
       gsap.from(headlineRef.current, {
-        y: 100, opacity: 0, scale: 0.95,
+        y: 60, opacity: 0, scale: 0.97,
         duration: 1, ease: "power3.out",
-        scrollTrigger: { trigger: headlineRef.current, start: "top 80%", end: "top 50%", scrub: 1 },
+        scrollTrigger: { trigger: headlineRef.current, start: "top 90%", toggleActions: "play none none none" },
       });
     }, sectionRef);
 
