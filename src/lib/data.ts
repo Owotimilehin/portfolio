@@ -19,20 +19,57 @@ export const personalInfo = {
       period: "2020 - 2021",
     },
   ],
-  experience: {
-    company: "Waystream",
-    location: "Lagos, Nigeria",
-    role: "Backend Vibe Coder",
-    period: "2022 - Present",
-    highlights: [
-      "Scalable Laravel APIs using DTO-driven architecture and Prettus repository pattern",
-      "Secure SSO authentication workflows across multiple platforms",
-      "Stripe payments with custom flows including unregistered user handling",
-      "RSS 2.0/iTunes feed ingestion pipelines with token-based verification",
-      "Redis-backed asynchronous job processing for high-performance workflows",
-      "Dockerized deployments on DigitalOcean with SSL configuration",
-    ],
-  },
+  experience: [
+    {
+      company: "Confidential",
+      location: "Remote",
+      role: "Remote Automation Engineer",
+      period: "Mar 2026 - Present",
+      highlights: [
+        "Google Sheets automations and custom App Script workflows",
+        "Workflow improvements and process optimization",
+        "Administrative tooling and personal assistance systems",
+      ],
+    },
+    {
+      company: "Waystream",
+      location: "Lagos, Nigeria",
+      role: "Backend Vibe Coder",
+      period: "2022 - Present",
+      highlights: [
+        "Scalable Laravel APIs using DTO-driven architecture and Prettus repository pattern",
+        "Secure SSO authentication workflows across multiple platforms",
+        "Stripe payments with custom flows including unregistered user handling",
+        "RSS 2.0/iTunes feed ingestion pipelines with token-based verification",
+        "Redis-backed asynchronous job processing for high-performance workflows",
+        "Dockerized deployments on DigitalOcean with SSL configuration",
+      ],
+      projects: [
+        {
+          name: "Waypod — Podcast platform",
+          links: {
+            web: "https://app.waystream.io/",
+            playStore: "https://play.google.com/store/apps/details?id=com.zyonel.waystream",
+            appStore: "https://apps.apple.com/ng/app/waystream/id1624508440",
+          },
+        },
+        {
+          name: "Waystream Live — Streaming platform",
+          links: {
+            web: "https://app.waystream.io/",
+            playStore: "https://play.google.com/store/apps/details?id=com.zyonel.waystream",
+            appStore: "https://apps.apple.com/ng/app/waystream/id1624508440",
+          },
+        },
+        {
+          name: "Waystream SSO — Cross-platform auth",
+          links: {
+            web: "https://accounts.waystream.io/",
+          },
+        },
+      ],
+    },
+  ],
   skills: [
     "Vibe Coding",
     "PHP & Laravel",

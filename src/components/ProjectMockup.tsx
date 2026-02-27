@@ -1,7 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 interface MockupProps {
   type: "dashboard" | "ecommerce" | "membership" | "learning";
   accentColor: string;
@@ -180,13 +178,7 @@ export function ProjectMockup({ type, accentColor }: MockupProps) {
   const Component = mockups[type];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40, rotateX: 8 }}
-      whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-      style={{ perspective: "1200px", position: "relative" }}
-    >
+    <div style={{ position: "relative" }}>
       {/* Glow behind mockup */}
       <div style={{
         position: "absolute",
@@ -206,6 +198,6 @@ export function ProjectMockup({ type, accentColor }: MockupProps) {
       }}>
         <Component accentColor={accentColor} />
       </div>
-    </motion.div>
+    </div>
   );
 }

@@ -20,6 +20,135 @@ const iconMap: Record<string, LucideIcon> = {
   Cloud, Cpu,
 };
 
+// Text scramble system
+type ScrambleMode = "hacker" | "shuffle" | "binary" | "slot";
+
+const SYMBOLS = "!@#$%^&*<>{}[]|;:~";
+const HEX_CHARS = "0123456789ABCDEF";
+const BINARY_CHARS = "01";
+const ALPHA_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+const scrambleModeMap: Record<string, ScrambleMode> = {
+  "Vibe Coding & AI": "hacker",
+  "Backend Engineering": "shuffle",
+  "Frontend & Scripting": "binary",
+  "Data & Architecture": "slot",
+  "DevOps & Infrastructure": "hacker",
+};
+
+function randomChar(charset: string): string {
+  return charset[Math.floor(Math.random() * charset.length)];
+}
+
+function shuffleArray(arr: number[]): number[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function runScramble(el: HTMLSpanElement, text: string, mode: ScrambleMode) {
+  const duration = mode === "binary" ? 2800 : mode === "slot" ? 2600 : 2000;
+  const startTime = performance.now();
+
+  // Pre-compute resolve order for shuffle mode
+  const nonSpaceIndices = text.split("").map((ch, i) => ch !== " " ? i : -1).filter(i => i >= 0);
+  const resolveOrder = shuffleArray(nonSpaceIndices);
+
+  // Pre-compute stop times for slot mode (staggered left→right with jitter)
+  const stopTimes = text.split("").map((ch, i) => {
+    if (ch === " ") return 0;
+    return 600 + (i / text.length) * 1800 + Math.random() * 150;
+  });
+
+  const tick = (now: number) => {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    let result = "";
+
+    switch (mode) {
+      case "hacker": {
+        // Resolve left→right, unresolved chars cycle through symbols
+        const resolved = Math.floor(progress * text.length);
+        result = text.split("").map((ch, i) => {
+          if (ch === " ") return " ";
+          return i < resolved ? ch : randomChar(SYMBOLS);
+        }).join("");
+        break;
+      }
+      case "shuffle": {
+        // Snap into place in random order, unresolved keep shuffling
+        const resolvedCount = Math.floor(progress * resolveOrder.length);
+        const resolvedSet = new Set(resolveOrder.slice(0, resolvedCount));
+        result = text.split("").map((ch, i) => {
+          if (ch === " ") return " ";
+          return resolvedSet.has(i) ? ch : randomChar(ALPHA_CHARS);
+        }).join("");
+        break;
+      }
+      case "binary": {
+        // Phase 1: binary → Phase 2: hex → Phase 3: resolve left→right
+        if (progress < 0.35) {
+          result = text.split("").map(ch => ch === " " ? " " : randomChar(BINARY_CHARS)).join("");
+        } else if (progress < 0.6) {
+          result = text.split("").map(ch => ch === " " ? " " : randomChar(HEX_CHARS)).join("");
+        } else {
+          const rp = (progress - 0.6) / 0.4;
+          const resolved = Math.floor(rp * text.length);
+          result = text.split("").map((ch, i) => {
+            if (ch === " ") return " ";
+            return i < resolved ? ch : randomChar(HEX_CHARS);
+          }).join("");
+        }
+        break;
+      }
+      case "slot": {
+        // Each column spins independently, stops at staggered times
+        result = text.split("").map((ch, i) => {
+          if (ch === " ") return " ";
+          return elapsed >= stopTimes[i] ? ch : randomChar(ALPHA_CHARS);
+        }).join("");
+        break;
+      }
+    }
+
+    el.textContent = result;
+
+    if (progress < 1) {
+      requestAnimationFrame(tick);
+    } else {
+      el.textContent = text;
+    }
+  };
+
+  requestAnimationFrame(tick);
+}
+
+function ScrambleText({ text, mode }: { text: string; mode: ScrambleMode }) {
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const played = useRef(false);
+
+  useEffect(() => {
+    if (!spanRef.current) return;
+
+    const st = ScrollTrigger.create({
+      trigger: spanRef.current,
+      start: "top 92%",
+      onEnter: () => {
+        if (played.current || !spanRef.current) return;
+        played.current = true;
+        runScramble(spanRef.current, text, mode);
+      },
+    });
+
+    return () => st.kill();
+  }, [text, mode]);
+
+  return <span ref={spanRef}>{text}</span>;
+}
+
 function SkillBar({ level, color }: { level: number; color: string }) {
   const barRef = useRef<HTMLDivElement>(null);
 
@@ -103,7 +232,7 @@ function CategorySection({ category }: { category: typeof skillCategories[0] }) 
           letterSpacing: "0.2em", textTransform: "uppercase",
           color: category.color,
         }}>
-          {category.category}
+          <ScrambleText text={category.category} mode={scrambleModeMap[category.category] || "hacker"} />
         </h3>
       </div>
 

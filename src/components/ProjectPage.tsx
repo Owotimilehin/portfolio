@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import {
   Shield, Users, Brain, Bell, FileText, BarChart3, CreditCard, IdCard,
   Newspaper, AlertTriangle, GraduationCap, Settings, DollarSign, Palette,
@@ -10,7 +9,7 @@ import {
 } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ProjectMockup } from "./ProjectMockup";
+import { CodePlayer } from "./CodePlayer";
 import type { Project } from "@/lib/data";
 import { projects } from "@/lib/data";
 import Link from "next/link";
@@ -25,12 +24,6 @@ const iconMap: Record<string, LucideIcon> = {
   ShoppingBag, Building, Sparkles, BookOpen, Play, Award, MessageSquare,
 };
 
-const mockupTypeMap: Record<string, "dashboard" | "ecommerce" | "membership" | "learning"> = {
-  compassio: "dashboard",
-  runacos: "membership",
-  n9ja: "ecommerce",
-  zyonel: "learning",
-};
 
 function Icon(name: string) {
   return iconMap[name] || Shield;
@@ -41,54 +34,42 @@ function Icon(name: string) {
    ─────────────────────────────────────────── */
 function ProjectHero({ project, index }: { project: Project; index: number }) {
   const sectionRef = useRef<HTMLElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
+  const ctaBtnRef = useRef<HTMLDivElement>(null);
   const mockupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Parallax exit on scroll
-      if (headRef.current) {
-        gsap.to(headRef.current, {
-          y: -120, opacity: 0, scale: 0.9,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "40% top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-      }
+      // ── ENTRANCE (on load) ──
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      if (subRef.current) {
-        gsap.to(subRef.current, {
-          y: -80, opacity: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "40% top",
-            end: "bottom top",
-            scrub: 1,
-          },
-        });
-      }
+      tl.fromTo(badgeRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8 }, 0.2)
+        .fromTo(headRef.current,
+          { opacity: 0, y: 60 },
+          { opacity: 1, y: 0, duration: 1.2 }, 0.4)
+        .fromTo(subRef.current,
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 1 }, 0.7)
+        .fromTo(ctaBtnRef.current,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.8 }, 1);
 
-      // Mockup entrance
-      if (mockupRef.current) {
-        gsap.from(mockupRef.current, {
-          scale: 0.85, opacity: 0, y: 60,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: mockupRef.current,
-            start: "top 90%",
-            toggleActions: "play none none none",
-          },
-        });
-      }
+      // Mockup fades up on scroll into view
+      gsap.from(mockupRef.current, {
+        y: 60, opacity: 0, scale: 0.95,
+        duration: 1, ease: "power3.out",
+        scrollTrigger: {
+          trigger: mockupRef.current,
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -97,126 +78,108 @@ function ProjectHero({ project, index }: { project: Project; index: number }) {
   return (
     <section ref={sectionRef} style={{
       position: "relative",
-      minHeight: "150dvh",
       background: "#000",
       overflow: "hidden",
       zIndex: 1,
     }}>
+      {/* Big gradient glow */}
       <div style={{
-        position: "sticky", top: 0,
-        height: "100dvh",
-        display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center",
-        overflow: "hidden",
+        position: "absolute",
+        top: "20%", left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: 1200, height: 800,
+        borderRadius: "50%",
+        background: project.accentColor,
+        filter: "blur(250px)",
+        opacity: 0.08,
+        pointerEvents: "none",
+      }} />
+
+      {/* Text content */}
+      <div style={{
+        position: "relative", zIndex: 10,
+        textAlign: "center",
+        padding: "140px 24px 60px",
+        maxWidth: 1100, margin: "0 auto",
       }}>
-        {/* Big gradient glow */}
-        <div style={{
-          position: "absolute",
-          top: "30%", left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 1200, height: 800,
-          borderRadius: "50%",
-          background: project.accentColor,
-          filter: "blur(250px)",
-          opacity: 0.08,
-          pointerEvents: "none",
-        }} />
+        {/* Badge */}
+        <div ref={badgeRef}>
+          <span style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            fontSize: 11, fontFamily: "monospace", fontWeight: 600,
+            letterSpacing: "0.2em", textTransform: "uppercase",
+            padding: "8px 20px", borderRadius: 9999,
+            color: project.accentColor,
+            background: `${project.accentColor}10`,
+            border: `1px solid ${project.accentColor}20`,
+            marginBottom: 40,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: project.accentColor }} />
+            Project {String(index + 1).padStart(2, "0")}
+          </span>
+        </div>
 
-        {/* Content */}
-        <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px", maxWidth: 1100, width: "100%" }}>
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-          >
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: 8,
-              fontSize: 11, fontFamily: "monospace", fontWeight: 600,
-              letterSpacing: "0.2em", textTransform: "uppercase",
-              padding: "8px 20px", borderRadius: 9999,
-              color: project.accentColor,
-              background: `${project.accentColor}10`,
-              border: `1px solid ${project.accentColor}20`,
-              marginBottom: 40,
-            }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: project.accentColor }} />
-              Project {String(index + 1).padStart(2, "0")}
-            </span>
-          </motion.div>
+        {/* Headline */}
+        <h1
+          ref={headRef}
+          style={{
+            fontSize: "clamp(48px, 10vw, 120px)",
+            fontWeight: 800,
+            fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+            letterSpacing: "-0.04em",
+            lineHeight: 0.9,
+            color: "#fff",
+            marginBottom: 24,
+          }}
+        >
+          {project.headline}
+        </h1>
 
-          {/* Headline */}
-          <motion.h1
-            ref={headRef}
-            initial={{ opacity: 0, y: 60 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            style={{
-              fontSize: "clamp(48px, 10vw, 120px)",
-              fontWeight: 800,
-              letterSpacing: "-0.05em",
-              lineHeight: 0.9,
-              color: "#fff",
-              marginBottom: 24,
-            }}
-          >
-            {project.headline}
-          </motion.h1>
+        {/* Subtitle */}
+        <p
+          ref={subRef}
+          style={{
+            fontSize: "clamp(15px, 2vw, 18px)",
+            color: "rgba(255,255,255,0.3)",
+            maxWidth: 500,
+            margin: "0 auto 40px",
+            lineHeight: 1.6,
+          }}
+        >
+          {project.title}
+        </p>
 
-          {/* Subtitle */}
-          <motion.p
-            ref={subRef}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.8 }}
-            style={{
-              fontSize: "clamp(15px, 2vw, 18px)",
-              color: "rgba(255,255,255,0.3)",
-              maxWidth: 500,
-              margin: "0 auto 40px",
-              lineHeight: 1.6,
-            }}
-          >
-            {project.title}
-          </motion.p>
-
-          {project.liveUrl && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
+        {project.liveUrl && (
+          <div ref={ctaBtnRef}>
+            <a
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: project.accentColor, color: "#fff",
+                padding: "14px 32px", borderRadius: 9999,
+                fontSize: 14, fontWeight: 600, textDecoration: "none",
+                transition: "all 0.4s",
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
             >
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  background: project.accentColor, color: "#fff",
-                  padding: "14px 32px", borderRadius: 9999,
-                  fontSize: 14, fontWeight: 600, textDecoration: "none",
-                  transition: "all 0.4s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
-              >
-                View Live <ExternalLink size={14} />
-              </a>
-            </motion.div>
-          )}
-        </div>
+              View Live <ExternalLink size={14} />
+            </a>
+          </div>
+        )}
+      </div>
 
-        {/* Mockup */}
-        <div ref={mockupRef} style={{
-          position: "absolute",
-          bottom: "-5%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "min(90vw, 900px)",
-          zIndex: 5,
-        }}>
-          <ProjectMockup type={mockupTypeMap[project.id] || "dashboard"} accentColor={project.accentColor} />
-        </div>
+      {/* Mockup — in flow, below text */}
+      <div ref={mockupRef} style={{
+        position: "relative",
+        zIndex: 5,
+        width: "min(90vw, 900px)",
+        margin: "0 auto",
+        padding: "0 24px 100px",
+      }}>
+        <CodePlayer projectId={project.id} accentColor={project.accentColor} />
       </div>
     </section>
   );

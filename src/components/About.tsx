@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { personalInfo } from "@/lib/data";
-import { Briefcase, GraduationCap, MapPin } from "lucide-react";
+import { Briefcase, GraduationCap, MapPin, Download, Globe, Smartphone } from "lucide-react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -60,7 +60,8 @@ export function About() {
         {/* Name — big and clear */}
         <h2 className="about-reveal" style={{
           fontSize: "clamp(40px, 7vw, 80px)",
-          fontWeight: 700,
+          fontWeight: 800,
+          fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
           letterSpacing: "-0.04em",
           color: "#fff",
           lineHeight: 0.95,
@@ -93,6 +94,8 @@ export function About() {
         {/* Bio */}
         <p className="about-reveal" style={{
           fontSize: "clamp(16px, 2vw, 19px)",
+          fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+          fontWeight: 400,
           color: "rgba(255,255,255,0.4)",
           lineHeight: 1.8,
           textAlign: "center",
@@ -101,6 +104,27 @@ export function About() {
         }}>
           {personalInfo.bio}
         </p>
+
+        {/* Download CV */}
+        <div className="about-reveal" style={{ display: "flex", justifyContent: "center", marginBottom: 40 }}>
+          <a
+            href="/cv.pdf"
+            download
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 10,
+              fontSize: 14, fontWeight: 500,
+              background: "#2563EB", color: "#fff",
+              padding: "12px 28px", borderRadius: 9999,
+              textDecoration: "none",
+              transition: "all 0.3s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "#1d4ed8"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#2563EB"; }}
+          >
+            <Download size={16} />
+            Download CV
+          </a>
+        </div>
 
         {/* Experience + Education cards */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 20 }} className="lg:!grid-cols-2">
@@ -118,18 +142,55 @@ export function About() {
               }}>
                 <Briefcase size={18} />
               </div>
-              <div>
-                <h3 style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>{personalInfo.experience.company}</h3>
-                <p style={{ fontSize: 12, fontFamily: "monospace", color: "rgba(255,255,255,0.3)" }}>
-                  {personalInfo.experience.role} &middot; {personalInfo.experience.period}
-                </p>
-              </div>
+              <h3 style={{ fontSize: 16, fontWeight: 600, color: "#fff" }}>Experience</h3>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {personalInfo.experience.highlights.slice(0, 4).map((item, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                  <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#2563EB", marginTop: 8, flexShrink: 0 }} />
-                  <p style={{ fontSize: 14, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>{item}</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+              {personalInfo.experience.map((exp, idx) => (
+                <div key={idx}>
+                  <div style={{ marginBottom: 12 }}>
+                    <p style={{ fontSize: 15, fontWeight: 500, color: "rgba(255,255,255,0.65)" }}>{exp.company}</p>
+                    <p style={{ fontSize: 12, fontFamily: "monospace", color: "rgba(255,255,255,0.3)", marginTop: 2 }}>
+                      {exp.role} &middot; {exp.period}
+                    </p>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    {exp.highlights.slice(0, 4).map((item, i) => (
+                      <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                        <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#2563EB", marginTop: 8, flexShrink: 0 }} />
+                        <p style={{ fontSize: 14, color: "rgba(255,255,255,0.35)", lineHeight: 1.6 }}>{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {exp.projects && (
+                    <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                      <p style={{ fontSize: 11, fontFamily: "monospace", fontWeight: 600, color: "rgba(255,255,255,0.2)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 10 }}>
+                        Projects
+                      </p>
+                      {exp.projects.map((proj, i) => (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+                          <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#10B981", flexShrink: 0, marginTop: 1 }} />
+                          <span style={{ fontSize: 13, color: "rgba(255,255,255,0.35)" }}>{proj.name}</span>
+                          <div style={{ display: "flex", gap: 6, marginLeft: 4 }}>
+                            {proj.links.web && (
+                              <a href={proj.links.web} target="_blank" rel="noopener noreferrer" title="Web App" style={{ color: "rgba(255,255,255,0.2)", transition: "color 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.color = "#2563EB"; }} onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.2)"; }}>
+                                <Globe size={12} />
+                              </a>
+                            )}
+                            {proj.links.playStore && (
+                              <a href={proj.links.playStore} target="_blank" rel="noopener noreferrer" title="Google Play" style={{ color: "rgba(255,255,255,0.2)", transition: "color 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.color = "#10B981"; }} onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.2)"; }}>
+                                <Smartphone size={12} />
+                              </a>
+                            )}
+                            {proj.links.appStore && (
+                              <a href={proj.links.appStore} target="_blank" rel="noopener noreferrer" title="App Store" style={{ color: "rgba(255,255,255,0.2)", transition: "color 0.2s" }} onMouseEnter={(e) => { e.currentTarget.style.color = "#8B5CF6"; }} onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(255,255,255,0.2)"; }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 0 1 5.3 2L12 11.3 6.7 6A8 8 0 0 1 12 4z"/></svg>
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -161,18 +222,6 @@ export function About() {
               ))}
             </div>
 
-            {/* Waystream projects */}
-            <div style={{ marginTop: 32, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              <p style={{ fontSize: 12, fontFamily: "monospace", fontWeight: 600, color: "rgba(255,255,255,0.2)", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 16 }}>
-                Waystream Projects
-              </p>
-              {["Waypod — Podcast platform", "Waystream Live — Streaming platform", "Waystream SSO — Cross-platform auth"].map((item, i) => (
-                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                  <span style={{ width: 4, height: 4, borderRadius: "50%", background: "#10B981", flexShrink: 0 }} />
-                  <p style={{ fontSize: 13, color: "rgba(255,255,255,0.35)" }}>{item}</p>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </div>

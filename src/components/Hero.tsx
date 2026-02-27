@@ -33,6 +33,8 @@ export function Hero() {
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<HTMLDivElement>(null);
+  const exploreRef = useRef<HTMLAnchorElement>(null);
+  const touchRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -54,19 +56,6 @@ export function Hero() {
           { opacity: 0, scale: 0.8 },
           { opacity: 1, scale: 1, duration: 1.2, ease: "power2.out" }, 0.6);
 
-      // ── CTA: fades + slides up on scroll into view ──
-      gsap.from(ctaRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ctaRef.current,
-          start: "top 95%",
-          toggleActions: "play none none none",
-        },
-      });
-
       // ── SCROLL-DRIVEN EXIT — second half of 200dvh ──
       const scrollTl = gsap.timeline({
         scrollTrigger: {
@@ -85,6 +74,30 @@ export function Hero() {
     }, sectionRef);
 
     return () => ctx.revert();
+  }, []);
+
+  // CTA Fade Up — fires once when buttons scroll into view
+  useEffect(() => {
+    const explore = exploreRef.current;
+    const touch = touchRef.current;
+    const cta = ctaRef.current;
+    if (!explore || !touch || !cta) return;
+
+    gsap.set([explore, touch], { opacity: 0, y: 30 });
+
+    const st = ScrollTrigger.create({
+      trigger: cta,
+      start: "top 95%",
+      once: true,
+      onEnter: () => {
+        gsap.fromTo([explore, touch],
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }
+        );
+      },
+    });
+
+    return () => st.kill();
   }, []);
 
   return (
@@ -182,8 +195,9 @@ export function Hero() {
             ref={headlineRef}
             style={{
               fontSize: "clamp(48px, 10vw, 130px)",
-              fontWeight: 900,
-              letterSpacing: "-0.05em",
+              fontWeight: 800,
+              fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+              letterSpacing: "-0.04em",
               lineHeight: 0.9,
               color: "#fff",
             }}
@@ -274,6 +288,7 @@ export function Hero() {
         }}
       >
         <a
+          ref={exploreRef}
           href="#work"
           style={{
             display: "inline-flex", alignItems: "center", gap: 8,
@@ -290,6 +305,7 @@ export function Hero() {
           Explore Work
         </a>
         <a
+          ref={touchRef}
           href="#contact"
           style={{
             display: "inline-flex", alignItems: "center",
@@ -307,6 +323,7 @@ export function Hero() {
           Get in Touch
         </a>
       </div>
+
     </section>
   );
 }
